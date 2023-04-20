@@ -10,8 +10,6 @@ root.render(
   <React.StrictMode>
     <ResetStyle />
     <GlobalStyle />
-    <TransactionProvider>
       <App />
-    </TransactionProvider>
   </React.StrictMode>
 )
