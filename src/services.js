@@ -5,7 +5,7 @@ export const services = {
     createAccount: async function createAccount(nome, email, senha) {
         const headers = new Headers()
         headers.append("Content-Type", "application/json")
-        const response = await fetch(`${baseUrl}/cadastro`, { method: "POST", body: JSON.stringify({ nome, email, senha }), headers })
+        const response = await fetch(`${baseUrl}/signup`, { method: "POST", body: JSON.stringify({ nome, email, senha }), headers })
         const responseText = await response.text()
         const status = response.status
         return { status, message: responseText }
@@ -13,7 +13,7 @@ export const services = {
     makeLogin: async function makeLogin(email, senha) {
         const headers = new Headers()
         headers.append("Content-Type", "application/json")
-        const response = await fetch(`${baseUrl}/login`, { method: "POST", body: JSON.stringify({ email, senha }), headers })
+        const response = await fetch(`${baseUrl}/signin`, { method: "POST", body: JSON.stringify({ email, senha }), headers })
         const responseText = await response.text()
         const status = response.status
         return { status, message: responseText }
@@ -23,7 +23,18 @@ export const services = {
         headers.append("Content-Type", "application/json")
         headers.append("Authorization", "Bearer " + token)
         headers.append("id", id)
-        const response = await fetch(`${baseUrl}/nova-transacao/${type}`, { method: "POST", body: JSON.stringify({ value, desc }), headers })
+        const response = await fetch(`${baseUrl}/transaction/${type}`, { method: "POST", body: JSON.stringify({ value, desc }), headers })
+        
+        const responseText = await response.text()
+        const status = response.status
+        return { status, message: responseText }
+    },
+    logout: async function logout(token, id) {
+        const headers = new Headers()
+        headers.append("Content-Type", "application/json")
+        headers.append("Authorization", "Bearer " + token)
+        headers.append("id", id)
+        const response = await fetch(`${baseUrl}/logout`, { method: "POST", headers })
         
         const responseText = await response.text()
         const status = response.status
@@ -34,7 +45,7 @@ export const services = {
         headers.append("Content-Type", "application/json")
         headers.append("Authorization", "Bearer " + token)
         headers.append("id", id)
-        const response = await fetch(`${baseUrl}/nova-transacao`, {method:"GET", headers})
+        const response = await fetch(`${baseUrl}/transaction`, {method:"GET", headers})
         const responseText = await response.text()
         const status = response.status
         return { status, message: JSON.parse(responseText)}

@@ -12,12 +12,14 @@ export default function App() {
     <PagesContainer>
       <BrowserRouter>
       <AccountProvider>
+      <TransactionProvider>
         <Routes>
           <Route path="/" element={<SignInPage />} />
           <Route path="/cadastro" element={<SignUpPage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/nova-transacao/:tipo" element={<TransactionsPage />} />
         </Routes>
+        </TransactionProvider>
         </AccountProvider>
       </BrowserRouter>
     </PagesContainer>
@@ -26,7 +28,7 @@ export default function App() {
 
 const PagesContainer = styled.main`
   background-color: #8c11be;
-  width: calc(100vw - 50px);
-  max-height: 100vh;
-  padding: 25px;
+  width: 100%;
+  /* max-height: 100vh; */
+  /* padding: 25px; */
 `
