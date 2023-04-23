@@ -5,6 +5,14 @@ const GlobalStyle = createGlobalStyle`
         font-family: 'Raleway';
         font-style: normal;
         font-weight: 400;
+        box-sizing:border-box;
+    }
+    main, html, #root, body{
+        height:100%;
+        width:100%;
+    }
+    svg {
+        cursor: pointer;
     }
     button {
         outline: none;
@@ -52,6 +60,14 @@ const GlobalStyle = createGlobalStyle`
         color: white;
         text-decoration: none;
         padding-top: 30px;
+    }
+    @keyframes zigzag {
+        30% { transform: translateX(-10px)}
+        60% { transform: translateX(20px)}
+        100% { transform: translateX(-10px)}   
+    }
+    .rotate {
+        animation: zigzag 1s linear;
     }
 `
 
