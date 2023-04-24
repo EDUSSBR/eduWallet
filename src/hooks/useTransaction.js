@@ -13,9 +13,13 @@ export function TransactionProvider({ children }) {
     const [transactionErrorMesage, setTransactionErrorMessage] = useState([])
     const [newTransactionWasMade, setNewTransactionWasMade] = useState(false)
     const { account } = useAccount()
+    const [disableTransaction, setDisableTransaction] = useState(false)
+    const [disableDeleteTransaction, setDisableDeleteTransaction] = useState([])
     const navigate = useNavigate()
+
     async function doTransaction(e, tipo) {
         try {
+            setDisableTransaction(()=> true)
             e.preventDefault()
             const numberToSend = Number(valor.trim().replace(",", ".")).toFixed(2)
             setValor((prev) => numberToSend.replace('.', ','))
@@ -28,9 +32,11 @@ export function TransactionProvider({ children }) {
             } else {
                 throw response
             }
+            setDisableTransaction(()=> false)
         } catch (e) {
-            console.log(e.message)
-            if (e.message && e.message !== "Failed to fetch") {
+            setDisableTransaction(()=> false)
+            console.log(e)
+             if (e.message && e.message !== "Failed to fetch" ) {
                 const mensagemDeErro = JSON.parse(e.message).map(item => {
                     let message = ""
                     let actualMessageSplitted = item.split(" ")
@@ -47,11 +53,26 @@ export function TransactionProvider({ children }) {
             }
         }
     }
+
     async function deleteTransaction(id) {
-        console.log(id)
+        const index = userInfo.transactions.findIndex(item=> item._id===id)
+        const newArrOfDisableds = [...userInfo.transactions]
+        newArrOfDisableds[index] = true 
+        setDisableDeleteTransaction(prev=>newArrOfDisableds)
+        try {
+            const response = await services.deleteTransactions(account.token, account.id, id)
+            if (response.status === 200) {
+                setUserInfo(()=> response.message[0])
+            }
+            newArrOfDisableds[index] = false 
+            setDisableDeleteTransaction(prev=>newArrOfDisableds)
+        } catch (e) {
+            console.log(e)
+            setDisableDeleteTransaction(prev=>newArrOfDisableds)
+        }
     }
 
-    return (<TransactionsContext.Provider value={{ userInfo, deleteTransaction, setUserInfo, valor, descricao, setValor, setDescricao, doTransaction, transactionErrorMesage, setTransactionErrorMessage }}>
+    return (<TransactionsContext.Provider value={{ disableTransaction,setDisableDeleteTransaction,disableDeleteTransaction,userInfo, deleteTransaction, setUserInfo, valor, descricao, setValor, setDescricao, doTransaction, transactionErrorMesage, setTransactionErrorMessage }}>
         {children}
     </TransactionsContext.Provider>)
 

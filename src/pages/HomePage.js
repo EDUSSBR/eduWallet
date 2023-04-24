@@ -12,8 +12,7 @@ import trashSvg from "../assets/trash-outline.svg"
 export default function HomePage() {
   const navigate = useNavigate()
   const { account, logout, setEmail, setSenha, setNome, setSenhaConfirmada, setAccount,setErrorMessage } = useAccount()
-  const { deleteTransaction, userInfo, setUserInfo, newTransactionWasMade, setTransactionErrorMessage } = useTransaction()
-
+  const { deleteTransaction, setDisableDeleteTransaction, disableDeleteTransaction, userInfo, setUserInfo, newTransactionWasMade, setTransactionErrorMessage } = useTransaction()
   const token = account?.token
   const id = account?.id
   function goToTransactionsPage(e, type) {
@@ -21,16 +20,15 @@ export default function HomePage() {
     navigate(`/nova-transacao/${type}`)
   }
   useEffect(() => {
-
+    
     (async () => {
       try {
-        console.log(token, id)
         if (token !== null && token !== undefined && id !== null && id !== undefined) {
 
           const userTransactions = await services.getTransactions(token, id)
           if (userTransactions.status === 200) {
-            console.log(userTransactions)
-            setUserInfo(userTransactions.message)
+            setDisableDeleteTransaction(()=>userTransactions?.transactions?.map(item=>false))
+            setUserInfo(userTransactions?.message)
             setTransactionErrorMessage("")
           }
         } else {
@@ -50,7 +48,7 @@ export default function HomePage() {
         }
       }
     )()
-  }, [newTransactionWasMade, token, id])
+  }, [newTransactionWasMade,disableDeleteTransaction,  token, id])
   return (
     <HomeContainer>
       <Header>
@@ -70,14 +68,25 @@ export default function HomePage() {
 
       <TransactionsContainer>
         {(userInfo?.transactions) ? (<ul>
-          {userInfo?.transactions?.map(item =>
+          {userInfo?.transactions?.map((item,i) =>
             <ListItemContainer key={item._id}>
               <div>
                 <span>{new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' }).format(new Date(item.date))}</span>
                 <strong>{item.desc}</strong>
               </div>
-              <Value color={item.type === "entrada" ? "positivo" : "negativo"}>{item.value.replace(".", ",")}</Value>
-              <img onClick={()=>deleteTransaction(item._id)} src={trashSvg} alt="" width="20px" height="20px" />
+              <Value color={item.type === "entrada" ? "positivo" : "negativo"}>{item?.value.replace(".", ",")}</Value>
+              {disableDeleteTransaction?.length>0 && disableDeleteTransaction[i]===true ? 
+              (<ThreeDots
+          height="28px"
+          display='inline'
+          width="25px"
+          radius="25"
+          color="gray"
+          ariaLabel="three-dots-loading"
+          wrapperStyle={{ marginLeft: "7px" }}
+          wrapperClassName=""
+          visible={true}
+        />) :(<img onClick={()=>deleteTransaction(item._id)} src={trashSvg} alt="" width="20px" height="20px" />)}
             </ListItemContainer>
           )}
         </ul>) : <ThreeDots
@@ -94,7 +103,7 @@ export default function HomePage() {
 
         <article>
           <strong>Saldo</strong>
-          {userInfo?.saldo ? (<Saldo color={userInfo?.saldo >= 0 ? "positivo" : "negativo"}>{userInfo?.saldo.replace(".", ",")}</Saldo>) : <ThreeDots
+          {!isNaN(userInfo?.saldo) ? (<Saldo color={userInfo?.saldo >= 0 ? "positivo" : "negativo"}>{Number(userInfo?.saldo).toFixed(2).replace(".", ",")}</Saldo>) : <ThreeDots
             height="15px"
             display='inline'
             width="40"
