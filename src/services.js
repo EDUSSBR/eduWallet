@@ -1,54 +1,79 @@
 // import dotenv from 'dotenv'
 // dotenv.config()
+
 const baseUrl = "http://localhost:2500"
 export const services = {
     createAccount: async function createAccount(nome, email, senha) {
-        const headers = new Headers()
-        headers.append("Content-Type", "application/json")
-        const response = await fetch(`${baseUrl}/signup`, { method: "POST", body: JSON.stringify({ nome, email, senha }), headers })
-        const responseText = await response.text()
-        const status = response.status
-        return { status, message: responseText }
+        try {
+
+            const headers = new Headers()
+            headers.append("Content-Type", "application/json")
+            const response = await fetch(`${baseUrl}/signup`, { method: "POST", body: JSON.stringify({ nome, email, senha }), headers })
+            const responseText = await response.text()
+            const status = response.status
+            return { status, message: responseText }
+        } catch (e) {
+            return e
+        }
     },
     makeLogin: async function makeLogin(email, senha) {
-        const headers = new Headers()
-        headers.append("Content-Type", "application/json")
-        const response = await fetch(`${baseUrl}/signin`, { method: "POST", body: JSON.stringify({ email, senha }), headers })
-        const responseText = await response.text()
-        const status = response.status
-        return { status, message: responseText }
+        try {
+            const headers = new Headers()
+            headers.append("Content-Type", "application/json")
+            const response = await fetch(`${baseUrl}/signin`, { method: "POST", body: JSON.stringify({ email, senha }), headers })
+            const responseText = await response.text()
+            const status = response.status
+            return { status, message: responseText }
+        } catch (e) {
+            return e
+        }
+
     },
     makeTransaction: async function makeTransaction(value, desc, token, id, type) {
-        const headers = new Headers()
-        headers.append("Content-Type", "application/json")
-        headers.append("Authorization", "Bearer " + token)
-        headers.append("id", id)
-        const response = await fetch(`${baseUrl}/transaction/${type}`, { method: "POST", body: JSON.stringify({ value, desc }), headers })
-        
-        const responseText = await response.text()
-        const status = response.status
-        return { status, message: responseText }
+        try {
+            const headers = new Headers()
+            headers.append("Content-Type", "application/json")
+            headers.append("Authorization", "Bearer " + token)
+            headers.append("id", id)
+            const response = await fetch(`${baseUrl}/transaction/${type}`, { method: "POST", body: JSON.stringify({ value, desc }), headers })
+
+            const responseText = await response.text()
+            const status = response.status
+
+            return { status, message: responseText }
+        } catch (e) {
+            return e
+        }
     },
     logout: async function logout(token, id) {
-        const headers = new Headers()
-        headers.append("Content-Type", "application/json")
-        headers.append("Authorization", "Bearer " + token)
-        headers.append("id", id)
-        const response = await fetch(`${baseUrl}/logout`, { method: "POST", headers })
-        
-        const responseText = await response.text()
-        const status = response.status
-        return { status, message: responseText }
+        try {
+            const headers = new Headers()
+            headers.append("Content-Type", "application/json")
+            headers.append("Authorization", "Bearer " + token)
+            headers.append("id", id)
+            const response = await fetch(`${baseUrl}/logout`, { method: "POST", headers })
+
+            const responseText = await response.text()
+            const status = response.status
+
+            return { status, message: responseText }
+        } catch (e) {
+            return e
+        }
     },
-    getTransactions: async function getTransactions(token, id){
-        const headers = new Headers()
-        headers.append("Content-Type", "application/json")
-        headers.append("Authorization", "Bearer " + token)
-        headers.append("id", id)
-        const response = await fetch(`${baseUrl}/transaction`, {method:"GET", headers})
-        const responseText = await response.text()
-        const status = response.status
-        return { status, message: JSON.parse(responseText)}
+    getTransactions: async function getTransactions(token, id) {
+        try {
+            const headers = new Headers()
+            headers.append("Content-Type", "application/json")
+            headers.append("Authorization", "Bearer " + token)
+            headers.append("id", id)
+            const response = await fetch(`${baseUrl}/transaction`, { method: "GET", headers })
+            const responseText = await response.text()
+            const status = response.status
+            return { status, message: JSON.parse(responseText) }
+        } catch (e) {
+            return e
+        }
     }
 
 }
