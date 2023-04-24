@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components"
 import { BiExit } from "react-icons/bi"
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useAccount } from "../hooks/useAccount"
 import { services } from "../services"
 import { useNavigate } from "react-router-dom"
@@ -14,6 +14,7 @@ export default function HomePage() {
   const { account, logout, setEmail, setSenha, setNome, setSenhaConfirmada, setAccount,setErrorMessage } = useAccount()
   const { deleteTransaction, setDisableDeleteTransaction, disableDeleteTransaction, userInfo, setUserInfo, newTransactionWasMade, setTransactionErrorMessage } = useTransaction()
   const token = account?.token
+  console.log(userInfo?.transactions?.length===0)
   const id = account?.id
   function goToTransactionsPage(e, type) {
     e.preventDefault()
@@ -49,6 +50,7 @@ export default function HomePage() {
       }
     )()
   }, [newTransactionWasMade,disableDeleteTransaction,  token, id])
+ 
   return (
     <HomeContainer>
       <Header>
@@ -67,8 +69,9 @@ export default function HomePage() {
       </Header>
 
       <TransactionsContainer>
-        {(userInfo?.transactions) ? (<ul>
-          {userInfo?.transactions?.length>0 && userInfo?.transactions?.map((item,i) =>
+
+        {   (userInfo?.transactions && userInfo?.transactions?.length>0) ? (<ul>
+          {userInfo?.transactions?.map((item,i) =>
             <ListItemContainer key={item._id}>
               <div>
                 <span>{new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' }).format(new Date(item.date))}</span>
@@ -89,7 +92,7 @@ export default function HomePage() {
         />) :(<img onClick={()=>deleteTransaction(item._id)} src={trashSvg} alt="" width="20px" height="20px" />)}
             </ListItemContainer>
           )}
-        </ul>) : <ThreeDots
+        </ul>) : ((userInfo?.transactions?.length===0) ? (<MensagemSaldoZero>Não há registros de <br/>entrada ou saída</MensagemSaldoZero>) : <ThreeDots
           height="15px"
           display='inline'
           width="40"
@@ -99,7 +102,7 @@ export default function HomePage() {
           wrapperStyle={{ margin: "auto auto" }}
           wrapperClassName=""
           visible={true}
-        />}
+        />)}
 
         <article>
           <strong>Saldo</strong>
@@ -146,6 +149,19 @@ const HomeContainer = styled.div`
     padding: 25px;
     margin: 0 auto;
 
+`
+const MensagemSaldoZero = styled.div`
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    text-align:center;
+    color: #868686;
+    font-family: 'Raleway';
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 23px;
 `
 const Header = styled.header`
   display: flex;
