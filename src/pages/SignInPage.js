@@ -116,13 +116,15 @@ const SingInContainer = styled.section`
     }
   }
   p {
-    /* display: none;
-    position: absolute; */
-    /* opacity: 0; */
-    color: white;
-    font-size: 18px;
+
+
+    color: black;
+    font-weight:900;
+    text-align:center;
+    font-size: 16px;
     animation-name: ${move};
     animation-duration: 1s;
+    
   }
   button{
     width:100%;

@@ -51,7 +51,10 @@ const SingUpContainer = styled.section`
     }
   }
   p {
-    color: white;
+    color: black;
+    font-weight:900;
+    text-align:center;
+    font-size: 16px;
     font-size: 18px;
     animation-name: ${move};
     animation-duration: 1s;

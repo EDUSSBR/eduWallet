@@ -23,6 +23,11 @@ export function TransactionProvider({ children }) {
             e.preventDefault()
             const numberToSend = Number(valor.trim().replace(",", ".")).toFixed(2)
             setValor((prev) => numberToSend.replace('.', ','))
+            if (Number(numberToSend)<=0){
+                setTransactionErrorMessage(()=>["O valor deve ser positivo."])
+                
+                return
+            }
             const response = await services.makeTransaction(numberToSend, descricao, account.token, account.id, tipo)
             if (response.status === 200) {
                 navigate("/home")
@@ -47,7 +52,7 @@ export function TransactionProvider({ children }) {
                     }
                     return message
                 })
-                setTransactionErrorMessage(() => mensagemDeErro)
+                setTransactionErrorMessage(() => [mensagemDeErro])
             } else {
                 setTransactionErrorMessage(() => ["Houve um problem com sua conexão, por favor, tente novamente."])
             }
@@ -76,7 +81,7 @@ export function TransactionProvider({ children }) {
         }
     }
 
-    return (<TransactionsContext.Provider value={{ disableTransaction,setDisableDeleteTransaction,disableDeleteTransaction,userInfo, deleteTransaction, setUserInfo, valor, descricao, setValor, setDescricao, doTransaction, transactionErrorMesage, setTransactionErrorMessage }}>
+    return (<TransactionsContext.Provider value={{ setTransactionErrorMessage,setDisableTransaction, disableTransaction,setDisableDeleteTransaction,disableDeleteTransaction,userInfo, deleteTransaction, setUserInfo, valor, descricao, setValor, setDescricao, doTransaction, transactionErrorMesage, setTransactionErrorMessage }}>
         {children}
     </TransactionsContext.Provider>)
 

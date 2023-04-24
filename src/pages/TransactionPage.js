@@ -6,14 +6,22 @@ import { useAccount } from "../hooks/useAccount"
 import { opacidadeErrorAnim, rotate } from "../style/frames"
 import arrow from "../assets/arrow-back-outline.svg"
 export default function TransactionsPage() {
-  const { account, setAccount, setEmail, setSenha,setSenhaConfirmada,setNome,setErrorMessage } = useAccount()
-  const { valor,setUserInfo, disableTransaction, descricao, setValor, setDescricao, doTransaction, transactionErrorMesage } = useTransaction()
+  const { account, setAccount, setEmail, setSenha, setSenhaConfirmada, setNome, setErrorMessage } = useAccount()
+  const { valor, setUserInfo, setDisableTransaction,setTransactionErrorMessage, disableTransaction, descricao, setValor, setDescricao, doTransaction, transactionErrorMesage } = useTransaction()
   const { tipo } = useParams()
   const navigate = useNavigate()
   const valueInputRef = useRef()
-  
+
   const isNotValidToken = !(account?.token !== null && account?.token !== undefined && account?.id !== null && account?.id !== undefined)
   const tipoDaPagina = tipo === "entrada" ? "entrada" : (tipo === "saida" ? "saída" : navigate("/"))
+  useEffect(() => {
+    if (transactionErrorMesage.length > 0) {
+      setTimeout(() => {
+        setTransactionErrorMessage(() => [])
+        setDisableTransaction(false)
+      }, 3000)
+    }
+  }, [transactionErrorMesage])
   useEffect(() => {
     const isNotValidTransaction = !(tipo === "entrada" || tipo === "saida")
     if (isNotValidTransaction) {
@@ -31,9 +39,9 @@ export default function TransactionsPage() {
       navigate("/")
     }
   }, [account?.token, account?.id, tipo])
-  useEffect(()=>{
+  useEffect(() => {
     valueInputRef?.current?.focus()
-  },[])
+  }, [])
   return (
     <TransactionsContainer>
       <TopContainer>
@@ -43,7 +51,7 @@ export default function TransactionsPage() {
 
       <form onSubmit={(e) => doTransaction(e, tipo)}>
         {transactionErrorMesage.length > 0 && transactionErrorMesage.map((item, index) => <p key={index}>{item}</p>)}
-        <input  pattern="^(\d+|\d+(?:[,.]\d+)*)$" value={valor} onChange={(e) => setValor((e.target.value))} placeholder="Valor" type="text" name="valor" ref={valueInputRef}/>
+        <input pattern="^(?:\d+(?:[,.]\d+)?|\d*[,.]\d+)$" value={valor} onChange={(e) => setValor((e.target.value))} placeholder="Valor" type="text" name="valor" ref={valueInputRef} />
         <input value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Descrição" type="text" name="descricao" />
         <button disabled={disableTransaction} type="submit">Salvar {tipoDaPagina}</button>
       </form>
@@ -72,8 +80,9 @@ const TransactionsContainer = styled.main`
   form{
     p{
       font-size:16px;
-      color:red;
-      background-color:white;
+      color:black;
+      font-weight:900;
+      /* background-color:white; */
       border-radius:10px;
       animation-name: ${opacidadeErrorAnim};
       animation-duration:6s;

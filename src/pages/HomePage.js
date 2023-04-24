@@ -68,7 +68,7 @@ export default function HomePage() {
 
       <TransactionsContainer>
         {(userInfo?.transactions) ? (<ul>
-          {userInfo?.transactions?.map((item,i) =>
+          {userInfo?.transactions?.length>0 && userInfo?.transactions?.map((item,i) =>
             <ListItemContainer key={item._id}>
               <div>
                 <span>{new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' }).format(new Date(item.date))}</span>
