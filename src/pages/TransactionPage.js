@@ -7,7 +7,7 @@ import { opacidadeErrorAnim, rotate } from "../style/frames"
 import arrow from "../assets/arrow-back-outline.svg"
 export default function TransactionsPage() {
   const { account, setAccount, setEmail, setSenha,setSenhaConfirmada,setNome,setErrorMessage } = useAccount()
-  const { valor,setUserInfo, descricao, setValor, setDescricao, doTransaction, transactionErrorMesage } = useTransaction()
+  const { valor,setUserInfo, disableTransaction, descricao, setValor, setDescricao, doTransaction, transactionErrorMesage } = useTransaction()
   const { tipo } = useParams()
   const navigate = useNavigate()
   const isNotValidToken = !(account?.token !== null && account?.token !== undefined && account?.id !== null && account?.id !== undefined)
@@ -40,7 +40,7 @@ export default function TransactionsPage() {
         {transactionErrorMesage.length > 0 && transactionErrorMesage.map((item, index) => <p key={index}>{item}</p>)}
         <input pattern="^(\d+|\d+(?:[,.]\d+)*)$" value={valor} onChange={(e) => setValor((e.target.value))} placeholder="Valor" type="text" name="valor" />
         <input value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Descrição" type="text" name="descricao" />
-        <button type="submit">Salvar {tipoDaPagina}</button>
+        <button disabled={disableTransaction} type="submit">Salvar {tipoDaPagina}</button>
       </form>
     </TransactionsContainer>
   )
