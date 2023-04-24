@@ -55,6 +55,10 @@ export function TransactionProvider({ children }) {
     }
 
     async function deleteTransaction(id) {
+        const shouldDelete = window.confirm("Voce realmente deseja deletar esse item?")
+        if (!shouldDelete){
+            return
+        }
         const index = userInfo.transactions.findIndex(item=> item._id===id)
         const newArrOfDisableds = [...userInfo.transactions]
         newArrOfDisableds[index] = true 
