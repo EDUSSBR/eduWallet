@@ -1,6 +1,12 @@
 import styled from 'styled-components'
 import sad from '../assets/sad-outline.svg'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 export function NotFound() {
+    const navigate = useNavigate()
+    useEffect(()=>{
+        setTimeout(()=>{navigate("/")},3000)
+    },[])
     return <Container>
         <img width="200px" src={sad} alt="" />
         <p>Not found page.</p>
