@@ -12,7 +12,6 @@ export default function SignInPage() {
   const { account, email, senha, setEmail,setAccount, setSenha,setNome, setSenhaConfirmada, autenticarUsuario, errorMessage, setErrorMessage } = useAccount()
   const { setUserInfo } = useTransaction()
   const navigate = useNavigate()
-  console.log(errorMessage)
   useEffect(() => {
     (
       async function checkUser() {
@@ -50,7 +49,6 @@ export default function SignInPage() {
     setNome("")
     setSenhaConfirmada("")
   },[])
-  console.log(errorMessage)
 return ( errorMessage[0]==="ContraEncontrada" ? (<ThreeDotsContainer><p>Detectamos sua conta, aguarde, validando informações...</p><ThreeDots
           height="40px"
           display='inline'
