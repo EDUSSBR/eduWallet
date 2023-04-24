@@ -17,18 +17,16 @@ export default function SignInPage() {
     (
       async function checkUser() {
         try {
-          setErrorMessage(() => [""])
-    
           if (account?.token && account?.id) {
-            console.log(account)
-            setErrorMessage(()=>["Detectamos sua conta, aguarde, validando informações..."])
+            setErrorMessage(()=>["ContraEncontrada"])
             const response = await services.getTransactions(account?.token, account?.id)
             if (response.status===200) {
-              setUserInfo(response.message)
-              navigate("/home")
+              setUserInfo(()=>response.message)
             } else {
               throw ""
             }
+            setErrorMessage([])
+            navigate("/home")
           }
         } catch (e) {
           setErrorMessage(()=>[])
@@ -40,19 +38,20 @@ export default function SignInPage() {
           setAccount({})
           localStorage.removeItem("accountInfo")
             setErrorMessage(() => ["Houve um problema com a autenticação de sua conta, por façor faça o login novamente."])
-        }
+
         navigate("/")
+        }
       }
         ())
-}, [account?.token, account?.id])
+}, [account?.token, account?.id, account])
   useEffect(()=>{
-    setErrorMessage(()=>[])
     setEmail("")
     setSenha("")
     setNome("")
     setSenhaConfirmada("")
   },[])
-return ( errorMessage[0]==="Detectamos sua conta, aguarde, validando informações..." ? (<ThreeDotsContainer><p>Detectamos sua conta, aguarde, validando informações...</p><ThreeDots
+  console.log(errorMessage)
+return ( errorMessage[0]==="ContraEncontrada" ? (<ThreeDotsContainer><p>Detectamos sua conta, aguarde, validando informações...</p><ThreeDots
           height="40px"
           display='inline'
           width="80px"
@@ -135,15 +134,12 @@ const SingInContainer = styled.section`
     border:0px solid transparent;
     &:hover{
       outline: 3px solid #58388c; 
-      /* border: 1px solid transparent; */
     }
     &:focus{
       outline: 3px solid #E1ED34; 
-      /* border: 1px solid transparent; */
     }
     &:active{
       outline: 3px solid #E1ED34; 
-      /* border: 1px solid transparent; */
     }
   }
   form{
