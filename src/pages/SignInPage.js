@@ -1,25 +1,28 @@
-import styled, { keyframes } from "styled-components"
-import { Link, useNavigate } from "react-router-dom"
+import styled from "styled-components"
+import {  useNavigate } from "react-router-dom"
 import MyWalletLogo from "../components/MyWalletLogo"
 import { useAccount } from "../hooks/useAccount"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { services } from "../services"
 import { useTransaction } from "../hooks/useTransaction"
 import { ThreeDots } from "react-loader-spinner"
-import { opacidadeAnim } from "./SignUpPage"
+import { move, opacidadeAnim } from "../style/frames"
 
 export default function SignInPage() {
-  const { account, email, senha, setEmail, setSenha, autenticarUsuario, errorMessage, setErrorMessage } = useAccount()
+  const { account, email, senha, setEmail,setAccount, setSenha,setNome, setSenhaConfirmada, autenticarUsuario, errorMessage, setErrorMessage } = useAccount()
   const { setUserInfo } = useTransaction()
   const navigate = useNavigate()
-
+  console.log(errorMessage)
   useEffect(() => {
     (
       async function checkUser() {
         try {
+          setErrorMessage(() => [""])
+    
           if (account?.token && account?.id) {
-            setErrorMessage("Detectamos sua conta, aguarde, validando informações...")
-            const response = await services.getTransactions(account.token, account.id)
+            console.log(account)
+            setErrorMessage(()=>["Detectamos sua conta, aguarde, validando informações..."])
+            const response = await services.getTransactions(account?.token, account?.id)
             if (response.status===200) {
               setUserInfo(response.message)
               navigate("/home")
@@ -28,12 +31,28 @@ export default function SignInPage() {
             }
           }
         } catch (e) {
-            setErrorMessage(() => "Houve um problema com a autenticação de sua conta, por façor faça o login novamente.")
+          setErrorMessage(()=>[])
+          setEmail("")
+          setSenha("")
+          setNome("")
+          setSenhaConfirmada("")
+          setUserInfo({})
+          setAccount({})
+          localStorage.removeItem("accountInfo")
+            setErrorMessage(() => ["Houve um problema com a autenticação de sua conta, por façor faça o login novamente."])
         }
+        navigate("/")
       }
         ())
 }, [account?.token, account?.id])
-return ( errorMessage==="Detectamos sua conta, aguarde, validando informações..." ? (<ThreeDotsContainer><p>Detectamos sua conta, aguarde, validando informações...</p><ThreeDots
+  useEffect(()=>{
+    setErrorMessage(()=>[])
+    setEmail("")
+    setSenha("")
+    setNome("")
+    setSenhaConfirmada("")
+  },[])
+return ( errorMessage[0]==="Detectamos sua conta, aguarde, validando informações..." ? (<ThreeDotsContainer><p>Detectamos sua conta, aguarde, validando informações...</p><ThreeDots
           height="40px"
           display='inline'
           width="80px"
@@ -48,8 +67,8 @@ return ( errorMessage==="Detectamos sua conta, aguarde, validando informações.
     <form onSubmit={(e)=> autenticarUsuario(e)}>
       <MyWalletLogo />
       {errorMessage?.length > 0 && (errorMessage?.map((item,i)=><p key={i}>{item}</p>))}
-      <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" type="email" />
-      <input value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Senha" type="password" autoComplete="new-password" />
+      <input required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" type="email" />
+      <input required value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Senha" type="password" autoComplete="new-password" />
       <button type="submit">Entrar</button>
     </form>
 
@@ -77,17 +96,9 @@ p{
 }
 `
 
-const move = keyframes`
- 0% { margin : 0px 0px; opacity:0}
- 50% { margin : 5px 0px; opacity:1}
- 100% { margin: 0px; opacity: 1; }
-`
 
-// const zigzag = keyframes`
-//  30% { transform: rotate(-2deg)}
-//  60% { transform: rotate(2deg)}
-//  100% { transform: rotate(0deg)}
-// `
+
+
 
 const SingInContainer = styled.section`
   padding:25px;
@@ -106,7 +117,9 @@ const SingInContainer = styled.section`
     }
   }
   p {
-    opacity: 1;
+    display: none;
+    position: absolute;
+    opacity: 0;
     color: #5e070b;
     animation-name: ${move};
     animation-duration: 1s;

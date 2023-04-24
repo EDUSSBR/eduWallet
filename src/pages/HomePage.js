@@ -7,11 +7,13 @@ import { services } from "../services"
 import { useNavigate } from "react-router-dom"
 import { useTransaction } from "../hooks/useTransaction"
 import { ThreeDots } from "react-loader-spinner"
+import trashSvg from "../assets/trash-outline.svg"
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const { account, logout } = useAccount()
-  const { userInfo, setUserInfo, newTransactionWasMade, setTransactionErrorMessage } = useTransaction()
+  const { account, logout, setEmail, setSenha, setNome, setSenhaConfirmada, setAccount,setErrorMessage } = useAccount()
+  const { deleteTransaction, userInfo, setUserInfo, newTransactionWasMade, setTransactionErrorMessage } = useTransaction()
+
   const token = account?.token
   const id = account?.id
   function goToTransactionsPage(e, type) {
@@ -22,18 +24,33 @@ export default function HomePage() {
 
     (async () => {
       try {
-        if (token !== null && id !== null) {
+        console.log(token, id)
+        if (token !== null && token !== undefined && id !== null && id !== undefined) {
+
           const userTransactions = await services.getTransactions(token, id)
           if (userTransactions.status === 200) {
+            console.log(userTransactions)
             setUserInfo(userTransactions.message)
             setTransactionErrorMessage("")
           }
+        } else {
+          throw ''
         }
       } catch (e) {
-        console.log(e)
+        setEmail("")
+        setSenha("")
+        setNome("")
+        setSenhaConfirmada("")
+        setUserInfo({})
+        setAccount({})
+        localStorage.removeItem("accountInfo")
+          setErrorMessage(() => ["Houve um problema com a autenticação de sua conta, por façor faça o login novamente."])
+          navigate("/")
+          console.log(e)
+        }
       }
-    })()
-  }, [newTransactionWasMade, account?.token, account?.id])
+    )()
+  }, [newTransactionWasMade, token, id])
   return (
     <HomeContainer>
       <Header>
@@ -59,7 +76,8 @@ export default function HomePage() {
                 <span>{new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' }).format(new Date(item.date))}</span>
                 <strong>{item.desc}</strong>
               </div>
-              <Value color={item.type === "entrada" ? "positivo" : "negativo"}>{item.value.replace(".",",")}</Value>
+              <Value color={item.type === "entrada" ? "positivo" : "negativo"}>{item.value.replace(".", ",")}</Value>
+              <img onClick={()=>deleteTransaction(item._id)} src={trashSvg} alt="" width="20px" height="20px" />
             </ListItemContainer>
           )}
         </ul>) : <ThreeDots
@@ -76,7 +94,7 @@ export default function HomePage() {
 
         <article>
           <strong>Saldo</strong>
-          {userInfo?.saldo ? (<Saldo color={userInfo?.saldo >= 0 ? "positivo" : "negativo"}>{userInfo?.saldo.replace(".",",")}</Saldo>) : <ThreeDots
+          {userInfo?.saldo ? (<Saldo color={userInfo?.saldo >= 0 ? "positivo" : "negativo"}>{userInfo?.saldo.replace(".", ",")}</Saldo>) : <ThreeDots
             height="15px"
             display='inline'
             width="40"
@@ -112,11 +130,13 @@ const rotateHome = keyframes`
   100% { transform: rotateX(0deg);}
 `
 const HomeContainer = styled.div`
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 25px;
+    margin: 0 auto;
 
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 25px;
 `
 const Header = styled.header`
   display: flex;
@@ -126,8 +146,14 @@ const Header = styled.header`
   margin-bottom: 15px;
   font-size: 26px;
   color: white;
+  img {
+      cursor:pointer;
+    }
 `
 const TransactionsContainer = styled.article`
+  img {
+      cursor:pointer;
+    }
   animation-name: ${rotateHome};
   animation-duration: 1s;
   flex-grow: 1;
@@ -146,8 +172,36 @@ const TransactionsContainer = styled.article`
     }
   }
   ul {
-    overflow-y: scroll;
+    width:100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height:100%;
     max-height: calc(100% - 16px);
+    li{
+      display: flex;
+      width:100%;
+      img{
+        margin-left: 5px;
+        align-self: flex-end;
+      }
+    }
+    ::-webkit-scrollbar {
+  width: 3px;
+  border-radius:3px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
     svg {
       display:block;
       width:100%;
@@ -155,6 +209,7 @@ const TransactionsContainer = styled.article`
     }
   }
   article {
+    
     position: relative;
     bottom:10px;
     left:23px;
