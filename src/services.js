@@ -1,11 +1,9 @@
 // import dotenv from 'dotenv'
 // dotenv.config()
-
 const baseUrl = "http://localhost:2500"
 export const services = {
     createAccount: async function createAccount(nome, email, senha) {
         try {
-
             const headers = new Headers()
             headers.append("Content-Type", "application/json")
             const response = await fetch(`${baseUrl}/signup`, { method: "POST", body: JSON.stringify({ nome, email, senha }), headers })
@@ -39,7 +37,6 @@ export const services = {
 
             const responseText = await response.text()
             const status = response.status
-
             return { status, message: responseText }
         } catch (e) {
             return e
@@ -67,17 +64,28 @@ export const services = {
             headers.append("Content-Type", "application/json")
             headers.append("Authorization", "Bearer " + token)
             headers.append("id", id)
-            const response = await fetch(`${baseUrl}/transaction`, { method: "GET", headers })
+            const response = await fetch(`${baseUrl}/transaction`, { method: "GET", headers})
             const responseText = await response.text()
             const status = response.status
             return { status, message: JSON.parse(responseText) }
         } catch (e) {
             return e
         }
+    },
+    deleteTransactions: async function deleteTransactions(token, id, transactionID) {
+        try {
+            const headers = new Headers()
+            headers.append("Content-Type", "application/json")
+            headers.append("Authorization", "Bearer " + token)
+            headers.append("id", id)
+            const response = await fetch(`${baseUrl}/transaction/${transactionID}`, { method: "DELETE", headers })
+            const responseText = await response.json()
+            const status = response.status
+
+            return { status, message: responseText }
+        } catch (e) {
+            return e
+        }
     }
 
 }
-
-// const response = await services.makeTransaction("30", "cobri o pagamento da divid do salgadinho","2e2cd346-0ebd-4818-8b1a-54d1d0dbca77","644034d43946ece951a45507", "entrada")
-// const response = await services.getTransactions("2e2cd346-0ebd-4818-8b1a-54d1d0dbca77","644034d43946ece951a45507")
-// console.log(response)
