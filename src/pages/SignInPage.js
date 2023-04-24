@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import {  useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import MyWalletLogo from "../components/MyWalletLogo"
 import { useAccount } from "../hooks/useAccount"
 import { useEffect } from "react"
@@ -9,7 +9,7 @@ import { ThreeDots } from "react-loader-spinner"
 import { move, opacidadeAnim } from "../style/frames"
 
 export default function SignInPage() {
-  const { account, email, senha, setEmail,setAccount, setSenha,setNome, setSenhaConfirmada, autenticarUsuario, errorMessage, setErrorMessage } = useAccount()
+  const { account, email, senha, setEmail, setAccount, setSenha, setNome, setSenhaConfirmada, autenticarUsuario, errorMessage, setErrorMessage } = useAccount()
   const { setUserInfo } = useTransaction()
   const navigate = useNavigate()
   useEffect(() => {
@@ -17,10 +17,10 @@ export default function SignInPage() {
       async function checkUser() {
         try {
           if (account?.token && account?.id) {
-            setErrorMessage(()=>["ContraEncontrada"])
+            setErrorMessage(() => ["ContraEncontrada"])
             const response = await services.getTransactions(account?.token, account?.id)
-            if (response.status===200) {
-              setUserInfo(()=>response.message)
+            if (response.status === 200) {
+              setUserInfo(() => response.message)
             } else {
               throw ""
             }
@@ -28,7 +28,7 @@ export default function SignInPage() {
             navigate("/home")
           }
         } catch (e) {
-          setErrorMessage(()=>[])
+
           setEmail("")
           setSenha("")
           setNome("")
@@ -36,46 +36,48 @@ export default function SignInPage() {
           setUserInfo({})
           setAccount({})
           localStorage.removeItem("accountInfo")
-            setErrorMessage(() => ["Houve um problema com a autenticação de sua conta, por façor faça o login novamente."])
-
-        navigate("/")
+          setErrorMessage(() => ["Houve um problema com a autenticação de sua conta, por façor faça o login novamente."])
+          navigate("/")
         }
       }
         ())
-}, [account?.token, account?.id, account])
-  useEffect(()=>{
-    setEmail("")
-    setSenha("")
-    setNome("")
-    setSenhaConfirmada("")
-  },[])
-return ( errorMessage[0]==="ContraEncontrada" ? (<ThreeDotsContainer><p>Detectamos sua conta, aguarde, validando informações...</p><ThreeDots
-          height="40px"
-          display='inline'
-          width="80px"
-          radius="15"
-          color="white"
-          ariaLabel="three-dots-loading"
-          wrapperStyle={{ background: "#9054BE" }}
-          wrapperClassName=""
-          visible={true}
-        /> </ThreeDotsContainer>) :
- ( <SingInContainer>
-    <form onSubmit={(e)=> autenticarUsuario(e)}>
-      <MyWalletLogo />
-      {errorMessage?.length > 0 && (errorMessage?.map((item,i)=><p key={i}>{item}</p>))}
-      <input required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" type="email" />
-      <input required value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Senha" type="password" autoComplete="new-password" />
-      <button type="submit">Entrar</button>
-    </form>
+  }, [account?.token, account?.id, account])
+  useEffect(() => {
+    if (!(account?.token && account?.id)) {
+      setErrorMessage(() => [])
+      setEmail("")
+      setSenha("")
+      setNome("")
+      setSenhaConfirmada("")
+    }
+  }, [])
+  return (errorMessage[0] === "ContraEncontrada" ? (<ThreeDotsContainer><p>Detectamos sua conta, aguarde, validando informações...</p><ThreeDots
+    height="40px"
+    display='inline'
+    width="80px"
+    radius="15"
+    color="white"
+    ariaLabel="three-dots-loading"
+    wrapperStyle={{ background: "#9054BE" }}
+    wrapperClassName=""
+    visible={true}
+  /> </ThreeDotsContainer>) :
+    (<SingInContainer>
+      <form onSubmit={(e) => autenticarUsuario(e)}>
+        <MyWalletLogo />
+        {errorMessage?.length > 0 && (errorMessage?.map((item, i) => <p key={i}>{item}</p>))}
+        <input required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" type="email" />
+        <input required value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Senha" type="password" autoComplete="new-password" />
+        <button type="submit">Entrar</button>
+      </form>
 
-    <a href="#" onClick={(e)=>{
-      e.preventDefault()
-      navigate('/cadastro')
-    } }>
-      Primeira vez? Cadastre-se!
-    </a>
-  </SingInContainer>)
+      <a href="#" onClick={(e) => {
+        e.preventDefault()
+        navigate('/cadastro')
+      }}>
+        Primeira vez? Cadastre-se!
+      </a>
+    </SingInContainer>)
   )
 }
 
@@ -114,10 +116,11 @@ const SingInContainer = styled.section`
     }
   }
   p {
-    display: none;
-    position: absolute;
-    opacity: 0;
-    color: #5e070b;
+    /* display: none;
+    position: absolute; */
+    /* opacity: 0; */
+    color: white;
+    font-size: 18px;
     animation-name: ${move};
     animation-duration: 1s;
   }

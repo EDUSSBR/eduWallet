@@ -71,12 +71,12 @@ export function AccountProvider({ children }) {
                 throw { message: mensagemDeErro }
             } else if (response.message === "Failed to fetch") {
                 throw { message: ["Houve um problema com a conexão ao servidor, por favor, tente novamente."] }
-            } 
-            
+            }
+
 
         }
         catch (e) {
-            
+
             console.log(errorMessage)
             if (e.message) {
                 setErrorMessage(() => e.message)
@@ -90,6 +90,8 @@ export function AccountProvider({ children }) {
             e.preventDefault()
             setErrorMessage(() => [])
             const response = await services.makeLogin(email, senha)
+            console.log(response)
+
             if (response.status === 200) {
                 localStorage.setItem("accountInfo", response.message)
                 setAccount(JSON.parse(response.message))
@@ -98,10 +100,12 @@ export function AccountProvider({ children }) {
                 throw { message: ["Houve um problema com a conexão ao servidor, por favor, tente novamente."] }
 
             } else {
-                navigate('/')
                 throw { message: ["Usuário não encontrado ou senha inválida,", "Por favor, verifique as informações e tente novamente."] }
             }
+            navigate('/')
         } catch (e) {
+            console.log(e)
+            console.log(e.message)
             if (e.message) {
                 setErrorMessage(() => e.message)
             } else {
@@ -109,7 +113,7 @@ export function AccountProvider({ children }) {
             }
         }
     }
-    return (<AccountContext.Provider value={{ account,setAccount, email, senha, setEmail, setSenha, criarUsuario, autenticarUsuario, setErrorMessage, errorMessage, setErrorMessage, logout, setNome, setSenhaConfirmada, nome, senhaConfirmada }}>
+    return (<AccountContext.Provider value={{ account, setAccount, email, senha, setEmail, setSenha, criarUsuario, autenticarUsuario, setErrorMessage, errorMessage, setErrorMessage, logout, setNome, setSenhaConfirmada, nome, senhaConfirmada }}>
         {children}
     </AccountContext.Provider>)
 

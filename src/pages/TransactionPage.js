@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import styled from "styled-components"
 import { useTransaction } from "../hooks/useTransaction"
@@ -10,6 +10,8 @@ export default function TransactionsPage() {
   const { valor,setUserInfo, disableTransaction, descricao, setValor, setDescricao, doTransaction, transactionErrorMesage } = useTransaction()
   const { tipo } = useParams()
   const navigate = useNavigate()
+  const valueInputRef = useRef()
+  
   const isNotValidToken = !(account?.token !== null && account?.token !== undefined && account?.id !== null && account?.id !== undefined)
   const tipoDaPagina = tipo === "entrada" ? "entrada" : (tipo === "saida" ? "saída" : navigate("/"))
   useEffect(() => {
@@ -29,6 +31,9 @@ export default function TransactionsPage() {
       navigate("/")
     }
   }, [account?.token, account?.id, tipo])
+  useEffect(()=>{
+    valueInputRef?.current?.focus()
+  },[])
   return (
     <TransactionsContainer>
       <TopContainer>
@@ -38,7 +43,7 @@ export default function TransactionsPage() {
 
       <form onSubmit={(e) => doTransaction(e, tipo)}>
         {transactionErrorMesage.length > 0 && transactionErrorMesage.map((item, index) => <p key={index}>{item}</p>)}
-        <input pattern="^(\d+|\d+(?:[,.]\d+)*)$" value={valor} onChange={(e) => setValor((e.target.value))} placeholder="Valor" type="text" name="valor" />
+        <input  pattern="^(\d+|\d+(?:[,.]\d+)*)$" value={valor} onChange={(e) => setValor((e.target.value))} placeholder="Valor" type="text" name="valor" ref={valueInputRef}/>
         <input value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Descrição" type="text" name="descricao" />
         <button disabled={disableTransaction} type="submit">Salvar {tipoDaPagina}</button>
       </form>

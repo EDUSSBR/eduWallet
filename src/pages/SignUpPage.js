@@ -51,8 +51,8 @@ const SingUpContainer = styled.section`
     }
   }
   p {
-    opacity: 1;
-    color: #5e070b;
+    color: white;
+    font-size: 18px;
     animation-name: ${move};
     animation-duration: 1s;
   }
