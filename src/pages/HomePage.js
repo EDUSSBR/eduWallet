@@ -12,7 +12,7 @@ import trashSvg from "../assets/trash-outline.svg"
 export default function HomePage() {
   const navigate = useNavigate()
   const { account, logout, setEmail, setSenha, setNome, setSenhaConfirmada, setAccount,setErrorMessage } = useAccount()
-  const { deleteTransaction, setDisableDeleteTransaction, disableDeleteTransaction, userInfo, setUserInfo, newTransactionWasMade, setTransactionErrorMessage } = useTransaction()
+  const { deleteTransaction, setDescricao, setValor,setTransactionID,transactionID, setDisableDeleteTransaction, disableDeleteTransaction, userInfo, setUserInfo, newTransactionWasMade, setTransactionErrorMessage } = useTransaction()
   const token = account?.token
   console.log(userInfo?.transactions?.length===0)
   const id = account?.id
@@ -42,6 +42,7 @@ export default function HomePage() {
         setSenhaConfirmada("")
         setUserInfo({})
         setAccount({})
+        setTransactionID("")
         localStorage.removeItem("accountInfo")
           setErrorMessage(() => ["Houve um problema com a autenticação de sua conta, por façor faça o login novamente."])
           navigate("/")
@@ -50,7 +51,9 @@ export default function HomePage() {
       }
     )()
   }, [newTransactionWasMade,disableDeleteTransaction,  token, id])
- 
+  useEffect(()=>{
+    setTransactionID("")
+  },[])
   return (
     <HomeContainer>
       <Header>
@@ -73,7 +76,12 @@ export default function HomePage() {
         {   (userInfo?.transactions && userInfo?.transactions?.length>0) ? (<ul>
           {userInfo?.transactions?.map((item,i) =>
             <ListItemContainer key={item._id}>
-              <div>
+              <div onClick={()=>{
+                setDescricao(item?.desc)
+                setTransactionID(item?._id)
+                setValor(item?.value.replace(",", "."))
+                navigate(`/editar/${item?.type}`)
+              }}>
                 <span>{new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' }).format(new Date(item.date))}</span>
                 <strong>{item.desc}</strong>
               </div>
@@ -311,9 +319,16 @@ const ListItemContainer = styled.li`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
   color: #000000;
-  margin-right: 10px;
+  padding: 4px 5px;
+  * &:hover {
+    opacity:0.8;
+    background-color: #e2c6f7;
+    border-radius: 7px;
+    div span{
+      color: black;
+    }
+  }
   div span {
     color: #c6c6c6;
     margin-right: 10px;

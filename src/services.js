@@ -42,6 +42,22 @@ export const services = {
             return e
         }
     },
+    updateTransaction: async function updateTransaction(value, desc, token, id, type, transactionID) {
+        try {
+            const headers = new Headers()
+            headers.append("Content-Type", "application/json")
+            headers.append("Authorization", "Bearer " + token)
+            headers.append("id", id)
+            console.log(type, transactionID)
+            const response = await fetch(`${baseUrl}/transaction/${type}`, { method: "PUT", body: JSON.stringify({ value, desc, transactionID }), headers })
+
+            const responseText = await response.text()
+            const status = response.status
+            return { status, message: responseText }
+        } catch (e) {
+            return e
+        }
+    },
     logout: async function logout(token, id) {
         try {
             const headers = new Headers()
