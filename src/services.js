@@ -1,6 +1,4 @@
-// import dotenv from 'dotenv'
-// dotenv.config()
-const baseUrl = "http://localhost:2500"
+const baseUrl = process.env.REACT_APP_BACK_URL
 export const services = {
     createAccount: async function createAccount(nome, email, senha) {
         try {
