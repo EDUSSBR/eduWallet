@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components"
 import { BiExit } from "react-icons/bi"
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useAccount } from "../hooks/useAccount"
 import { services } from "../services"
 import { useNavigate } from "react-router-dom"
@@ -14,7 +14,6 @@ export default function HomePage() {
   const { account, logout, setEmail, setSenha, setNome, setSenhaConfirmada, setAccount,setErrorMessage } = useAccount()
   const { deleteTransaction, setDescricao, setValor,setTransactionID,transactionID, setDisableDeleteTransaction, disableDeleteTransaction, userInfo, setUserInfo, newTransactionWasMade, setTransactionErrorMessage } = useTransaction()
   const token = account?.token
-  console.log(userInfo?.transactions?.length===0)
   const id = account?.id
   function goToTransactionsPage(e, type) {
     e.preventDefault()
@@ -46,7 +45,6 @@ export default function HomePage() {
         localStorage.removeItem("accountInfo")
           setErrorMessage(() => ["Houve um problema com a autenticação de sua conta, por façor faça o login novamente."])
           navigate("/")
-          console.log(e)
         }
       }
     )()

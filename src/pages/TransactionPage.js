@@ -12,16 +12,11 @@ export default function TransactionsPage() {
   const navigate = useNavigate()
   const valueInputRef = useRef()
   const pageTypes = { types: { entrada: "entrada", saida: "saida" }, actions: { novaTransacao: "nova-transacao", editar: "editar" } }
-  // const tipo = { types: { entrada: "entrada", saida: "saída" }, actions: {novaTransacao: "nova-transacao", editar:"editar"}}
   const isNotValidTransaction = !(tipo in pageTypes.types && (action === pageTypes.actions.novaTransacao || action === pageTypes.actions.editar))
-  console.log("entrada" in pageTypes.types)
   const isNotValidToken = !(account?.token !== null && account?.token !== undefined && account?.id !== null && account?.id !== undefined)
-  console.log(tipo, action)
   if (isNotValidTransaction) {
     navigate("/")
   }
-  // if (action !== pageTypes.actions.novaTransacao)
-  // tipo === "entrada" ? "entrada" : (tipo === "saida" ? "saída" : navigate("/"))
   useEffect(() => {
     if (transactionErrorMesage.length > 0) {
       setTimeout(() => {

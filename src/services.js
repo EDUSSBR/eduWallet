@@ -46,7 +46,6 @@ export const services = {
             headers.append("Content-Type", "application/json")
             headers.append("Authorization", "Bearer " + token)
             headers.append("id", id)
-            console.log(type, transactionID)
             const response = await fetch(`${baseUrl}/transaction/${type}`, { method: "PUT", body: JSON.stringify({ value, desc, transactionID }), headers })
 
             const responseText = await response.text()

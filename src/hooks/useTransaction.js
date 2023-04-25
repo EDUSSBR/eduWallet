@@ -48,7 +48,6 @@ export function TransactionProvider({ children }) {
             setDisableTransaction(() => false)
         } catch (e) {
             setDisableTransaction(() => false)
-            console.log(e)
             if (e.message && e.message !== "Failed to fetch") {
                 const mensagemDeErro = JSON.parse(e.message).map(item => {
                     let message = ""
@@ -84,7 +83,6 @@ export function TransactionProvider({ children }) {
             newArrOfDisableds[index] = false
             setDisableDeleteTransaction(prev => newArrOfDisableds)
         } catch (e) {
-            console.log(e)
             setDisableDeleteTransaction(prev => newArrOfDisableds)
         }
     }

@@ -110,6 +110,8 @@ const SingInContainer = styled.section`
   animation: ${opacidadeAnim};
   animation-duration:1s;
   a{
+    margin : 30px !important;
+    padding-top:0px !important;
     &:hover{
       color: black;
       opacity: 0.7;

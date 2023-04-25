@@ -45,6 +45,8 @@ const SingUpContainer = styled.section`
   animation-name: ${opacidadeAnim};
   animation-duration: 1s;
   a{
+    margin-top:30px;
+    padding-top:0px;
     &:hover{
       color: black;
       opacity: 0.7;

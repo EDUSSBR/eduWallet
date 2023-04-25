@@ -58,7 +58,6 @@ export function AccountProvider({ children }) {
                 const mensagemDeErro = JSON.parse(response.message).map(item => {
                     let message = ""
                     let actualMessageSplitted = item.split(" ")
-                    console.log(actualMessageSplitted)
                     if (actualMessageSplitted[0] === "\"email\"") {
                         message = "Por favor, utilize um e-mail válido."
                     } else if (actualMessageSplitted[0] === "\"nome\"" && actualMessageSplitted[6] === '3') {
@@ -77,7 +76,6 @@ export function AccountProvider({ children }) {
         }
         catch (e) {
 
-            console.log(errorMessage)
             if (e.message) {
                 setErrorMessage(() => e.message)
             } else {
@@ -90,7 +88,6 @@ export function AccountProvider({ children }) {
             e.preventDefault()
             setErrorMessage(() => [])
             const response = await services.makeLogin(email, senha)
-            console.log(response)
 
             if (response.status === 200) {
                 localStorage.setItem("accountInfo", response.message)
@@ -104,8 +101,6 @@ export function AccountProvider({ children }) {
             }
             navigate('/')
         } catch (e) {
-            console.log(e)
-            console.log(e.message)
             if (e.message) {
                 setErrorMessage(() => e.message)
             } else {
