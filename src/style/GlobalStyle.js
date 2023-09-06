@@ -18,18 +18,21 @@ const GlobalStyle = createGlobalStyle`
         outline: none;
         border: none;
         border-radius: 5px;
-        background-color: #a328d6;
+        background-color: #FEA43D;
         font-size: 20px;
         font-weight: 600;
-        color: #fff;
+        color: white;
         cursor: pointer;
         width: 100%;
         padding: 12px;
+        height: calc( 15vw + 10px) ;
+    max-height:54px;
+    min-height:40px;
     }
     h1 {
         font-weight: 700;
         font-size: 26px;
-        color: white;
+        color: #5f9ec5;
     }
     input {
         font-size: 20px;
@@ -40,7 +43,7 @@ const GlobalStyle = createGlobalStyle`
         padding: 15px;
         margin: 1px;
         :focus {
-            border: 2px solid #ffb6b6;
+            border: 2px solid #FEA43D;
             margin: 0px;
         }
     }
@@ -57,9 +60,12 @@ const GlobalStyle = createGlobalStyle`
         font-weight: 700;
         font-size: 15px;
         line-height: 18px;
-        color: white;
+        color: #2E6E96;
         text-decoration: none;
         padding-top: 30px;
+        :hover{
+            color: #FEA43D;
+        }
     }
     @keyframes zigzag {
         30% { transform: translateX(-10px)}
