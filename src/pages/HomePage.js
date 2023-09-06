@@ -6,13 +6,14 @@ import { useAccount } from "../hooks/useAccount"
 import { services } from "../services"
 import { useNavigate } from "react-router-dom"
 import { useTransaction } from "../hooks/useTransaction"
-import { ThreeDots } from "react-loader-spinner"
-import trashSvg from "../assets/trash-outline.svg"
+import trashSvg from "../assets/trashicon1.webp"
+import { Loader } from "../components/Loader"
+// import trashSvg from "../assets/trash-outline.svg"
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const { account, logout, setEmail, setSenha, setNome, setSenhaConfirmada, setAccount,setErrorMessage } = useAccount()
-  const { deleteTransaction, setDescricao, setValor,setTransactionID,transactionID, setDisableDeleteTransaction, disableDeleteTransaction, userInfo, setUserInfo, newTransactionWasMade, setTransactionErrorMessage } = useTransaction()
+  const { account, logout, setEmail, setSenha, setNome, setSenhaConfirmada, setAccount, setErrorMessage } = useAccount()
+  const { deleteTransaction, setDescricao, setValor, setTransactionID, transactionID, setDisableDeleteTransaction, disableDeleteTransaction, userInfo, setUserInfo, newTransactionWasMade, setTransactionErrorMessage } = useTransaction()
   const token = account?.token
   const id = account?.id
   function goToTransactionsPage(e, type) {
@@ -20,14 +21,14 @@ export default function HomePage() {
     navigate(`/nova-transacao/${type}`)
   }
   useEffect(() => {
-    
+
     (async () => {
       try {
         if (token !== null && token !== undefined && id !== null && id !== undefined) {
 
           const userTransactions = await services.getTransactions(token, id)
           if (userTransactions.status === 200) {
-            setDisableDeleteTransaction(()=>userTransactions?.transactions?.map(item=>false))
+            setDisableDeleteTransaction(() => userTransactions?.transactions?.map(item => false))
             setUserInfo(userTransactions?.message)
             setTransactionErrorMessage("")
           }
@@ -43,38 +44,28 @@ export default function HomePage() {
         setAccount({})
         setTransactionID("")
         localStorage.removeItem("accountInfo")
-          setErrorMessage(() => ["Houve um problema com a autenticação de sua conta, por façor faça o login novamente."])
-          navigate("/")
-        }
+        setErrorMessage(() => ["Houve um problema com a autenticação de sua conta, por façor faça o login novamente."])
+        navigate("/")
       }
+    }
     )()
-  }, [newTransactionWasMade,disableDeleteTransaction,  token, id])
-  useEffect(()=>{
+  }, [newTransactionWasMade, disableDeleteTransaction, token, id])
+  useEffect(() => {
     setTransactionID("")
-  },[])
+  }, [])
   return (
     <HomeContainer>
       <Header>
-        {(userInfo && <h1>Olá, {userInfo?.nome}</h1>) || <ThreeDots
-          height="26px"
-          display='inline'
-          width="40"
-          radius="9"
-          color="white"
-          ariaLabel="three-dots-loading"
-          wrapperStyle={{ marginLeft: "28px" }}
-          wrapperClassName=""
-          visible={true}
-        />}
-        <BiExit onClick={logout} />
+        {(userInfo && <h1>Olá, {userInfo?.nome}</h1>) || <Loader height="26px" width="40" radius="9" wrapperStyle={{ background: "inherit", marginLeft: "28px" }}/>}
+        <BiExit color="#5f9ec5" onClick={logout} />
       </Header>
 
       <TransactionsContainer>
 
-        {   (userInfo?.transactions && userInfo?.transactions?.length>0) ? (<ul>
-          {userInfo?.transactions?.map((item,i) =>
-            <ListItemContainer key={item._id}>
-              <div onClick={()=>{
+        {(userInfo?.transactions && userInfo?.transactions?.length > 0) ? (<ul>
+          {userInfo?.transactions?.map((item, i) =>
+            <ListItemContainer color={item.type === "entrada" ? "positivo" : "negativo"} key={item._id}>
+              <div onClick={() => {
                 setDescricao(item?.desc)
                 setTransactionID(item?._id)
                 setValor(item?.value.replace(",", "."))
@@ -83,46 +74,19 @@ export default function HomePage() {
                 <span>{new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' }).format(new Date(item.date))}</span>
                 <strong>{item.desc}</strong>
               </div>
-              <Value color={item.type === "entrada" ? "positivo" : "negativo"}>{item?.value.replace(".", ",")}</Value>
-              {disableDeleteTransaction?.length>0 && disableDeleteTransaction[i]===true ? 
-              (<ThreeDots
-          height="28px"
-          display='inline'
-          width="25px"
-          radius="25"
-          color="gray"
-          ariaLabel="three-dots-loading"
-          wrapperStyle={{ marginLeft: "7px" }}
-          wrapperClassName=""
-          visible={true}
-        />) :(<img onClick={()=>deleteTransaction(item._id)} src={trashSvg} alt="" width="20px" height="20px" />)}
+              <Value>{item?.value.replace(".", ",")}</Value>
+              {disableDeleteTransaction?.length > 0 && disableDeleteTransaction[i] === true ?
+                (<Loader height="28px" width="25px" radius="25" wrapperStyle={{ marginLeft: "7px" }}/>) : (<img onClick={() => deleteTransaction(item._id)} src={trashSvg} alt="" width="40px" height="40px" />)}
             </ListItemContainer>
           )}
-        </ul>) : ((userInfo?.transactions?.length===0) ? (<MensagemSaldoZero>Não há registros de <br/>entrada ou saída</MensagemSaldoZero>) : <ThreeDots
-          height="15px"
-          display='inline'
-          width="40"
-          radius="9"
-          color="gray"
-          ariaLabel="three-dots-loading"
-          wrapperStyle={{ margin: "auto auto" }}
-          wrapperClassName=""
-          visible={true}
-        />)}
+        </ul>) : ((userInfo?.transactions?.length === 0) ? (<MensagemSaldoZero>Não há registros de <br />entrada ou saída</MensagemSaldoZero>) : 
+        <Loader height="15px"           width="40"           radius="9" wrapperStyle={{ margin: "auto auto" }} />        )}
 
         <article>
           <strong>Saldo</strong>
-          {!isNaN(userInfo?.saldo) ? (<Saldo color={userInfo?.saldo >= 0 ? "positivo" : "negativo"}>{Number(userInfo?.saldo).toFixed(2).replace(".", ",")}</Saldo>) : <ThreeDots
-            height="15px"
-            display='inline'
-            width="40"
-            radius="9"
-            color="gray"
-            ariaLabel="three-dots-loading"
-            wrapperStyle={{ marginLeft: "28px" }}
-            wrapperClassName=""
-            visible={true}
-          />}
+          {!isNaN(userInfo?.saldo) ? (<Saldo color={userInfo?.saldo >= 0 ? "positivo" : "negativo"}>{Number(userInfo?.saldo).toFixed(2).replace(".", ",")}</Saldo>) : 
+          <Loader height="15px" width="40" radius="9" wrapperStyle={{ marginLeft: "28px" }} />
+          }
         </article>
       </TransactionsContainer>
 
@@ -137,7 +101,6 @@ export default function HomePage() {
           <p>Nova <br />saída</p>
         </Button>
       </ButtonsContainer>
-
     </HomeContainer>
   )
 }
@@ -163,7 +126,7 @@ const MensagemSaldoZero = styled.div`
     align-items: center;
     justify-content: center;
     text-align:center;
-    color: #868686;
+    color: #5f9ec5;
     font-family: 'Raleway';
     font-weight: 400;
     font-size: 20px;
@@ -176,13 +139,17 @@ const Header = styled.header`
   padding: 0 2px 5px 2px;
   margin-bottom: 15px;
   font-size: 26px;
-  color: white;
+  h1{
+
+    color: #5f9ec5;
+  }
   img {
       cursor:pointer;
     }
 `
 const TransactionsContainer = styled.article`
   img {
+    
       cursor:pointer;
     }
   animation-name: ${rotateHome};
@@ -252,6 +219,7 @@ const TransactionsContainer = styled.article`
       position: absolute;
       bottom: -35px;
       left: -24px;
+      color:#5f9ec5;
     }
     div{
       position: absolute;
@@ -274,7 +242,7 @@ const ButtonsContainer = styled.section`
   
 
   button {
-    background-color: #A328D6;
+    background-color: #FEA43D;
     border-radius: 5px;
     width: 50%;
     height: 115px;
@@ -306,29 +274,46 @@ const ButtonsContainer = styled.section`
 const Value = styled.div`
   font-size: 16px;
   text-align: right;
-  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
+  
 `
 const Saldo = styled.div`
   font-size: 16px;
   text-align: right;
-  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
+  color: ${(props) => (props.color === "positivo" ? "#4e854e" : "#dd4f17")};
 `
 const ListItemContainer = styled.li`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #000000;
+  color: #087bc2;
   padding: 4px 5px;
   * &:hover {
     opacity:0.8;
-    background-color: #e2c6f7;
+    background-color: #5f9ec5;
     border-radius: 7px;
-    div span{
-      color: black;
+    color:white;
+    -webkit-box-shadow: 0px 16px 18px -13px #5f9ec5;
+-moz-box-shadow: 0px 16px 18px -13px #5f9ec5;
+box-shadow: 0px 16px 18px -13px #5f9ec5;
+    div {
+    color: ${(props) => (props.color === "positivo" ? "#00ff00" : "#ff0000")};
     }
+    div span, div > strong{
+      color: black;
+      color:white;
+      :hover{
+        color:white;
+      }
+    }
+ 
   }
-  div span {
-    color: #c6c6c6;
+  div > span, div > strong {
+    color: #79b9e0;
     margin-right: 10px;
+ 
+  }
+  div {
+    color: ${(props) => (props.color === "positivo" ? "#4e854e" : "#9c2c00")};
+
   }
 `

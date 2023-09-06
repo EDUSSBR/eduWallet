@@ -88,7 +88,7 @@ const TransactionsContainer = styled.main`
   form{
     p{
       font-size:16px;
-      color:black;
+      color:#b30505;
       font-weight:900;
       /* background-color:white; */
       border-radius:10px;

@@ -29,7 +29,7 @@ export default function App() {
 }
 
 const PagesContainer = styled.main`
-  background-color: #8c11be;
+  background-color: #f8f8f8ea;
   width: 100%;
   /* max-height: 100vh; */
   /* padding: 25px; */
