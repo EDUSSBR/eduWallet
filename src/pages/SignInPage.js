@@ -1,13 +1,13 @@
 import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
-import MyWalletLogo from "../components/MyWalletLogo"
 import { useAccount } from "../hooks/useAccount"
 import { useEffect } from "react"
 import { services } from "../services"
 import { useTransaction } from "../hooks/useTransaction"
-import { ThreeDots } from "react-loader-spinner"
 import { move, opacidadeAnim } from "../style/frames"
-
+import logo from "../assets/logo.webp"
+import logo2 from "../assets/logo2.webp"
+import { Loader } from "../components/Loader"
 export default function SignInPage() {
   const { account, email, senha, setEmail, setAccount, setSenha, setNome, setSenhaConfirmada, autenticarUsuario, errorMessage, setErrorMessage } = useAccount()
   const { setUserInfo } = useTransaction()
@@ -51,20 +51,15 @@ export default function SignInPage() {
       setSenhaConfirmada("")
     }
   }, [])
-  return (errorMessage[0] === "ContraEncontrada" ? (<ThreeDotsContainer><p>Detectamos sua conta, aguarde, validando informações...</p><ThreeDots
-    height="40px"
-    display='inline'
-    width="80px"
-    radius="15"
-    color="white"
-    ariaLabel="three-dots-loading"
-    wrapperStyle={{ background: "#9054BE" }}
-    wrapperClassName=""
-    visible={true}
-  /> </ThreeDotsContainer>) :
+  return (errorMessage[0] === "ContraEncontrada" ? (<LoaderContainer><p>Detectamos sua conta, aguarde, validando informações...</p>
+  <Loader height="40px" width="80px" radius="15" wrapperStyle={{ background: "inherit" }} />
+</LoaderContainer>) :
     (<SingInContainer>
       <form onSubmit={(e) => autenticarUsuario(e)}>
-        <MyWalletLogo />
+        <picture >
+        <source media="(max-width:350px)" srcset={logo2} />
+        <img src={logo} alt="logo"/>
+      </picture>
         {errorMessage?.length > 0 && (errorMessage?.map((item, i) => <p key={i}>{item}</p>))}
         <input required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" type="email" />
         <input required value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Senha" type="password" autoComplete="new-password" />
@@ -81,7 +76,7 @@ export default function SignInPage() {
   )
 }
 
-const ThreeDotsContainer = styled.div`
+const LoaderContainer = styled.div`
 height: 100%;
 display: flex;
 flex-direction:column;
@@ -89,13 +84,11 @@ align-items:center;
 justify-content: center;
 p{
   text-align:center;
-  color: white;
+  color: #FEA43D;
   font-size: 20px;
   font-weight:800;
 }
 `
-
-
 
 
 
@@ -113,7 +106,7 @@ const SingInContainer = styled.section`
     margin : 30px !important;
     padding-top:0px !important;
     &:hover{
-      color: black;
+      /* color: black; */
       opacity: 0.7;
     }
   }
@@ -136,15 +129,18 @@ const SingInContainer = styled.section`
     }
   }
   input{
+    height: calc( 15vw + 10px) ;
+    max-height:54px;
+    min-height:40px;
     border:0px solid transparent;
     &:hover{
-      outline: 3px solid #58388c; 
+      outline: 3px solid #074064; 
     }
     &:focus{
-      outline: 3px solid #E1ED34; 
+      outline: 3px solid #ed9d34; 
     }
     &:active{
-      outline: 3px solid #E1ED34; 
+      outline: 3px solid #ed9d34; 
     }
   }
   form{
@@ -156,5 +152,30 @@ const SingInContainer = styled.section`
     width: 100%;
     max-width:500px;
   }
+  img {
+    max-width:80%;
+    margin-bottom:25px;
+  
+  }
+  picture{
+    width:100%;
+    display:flex;
+    justify-content:center;
+  }
+  @media (max-width:350px){
+    padding:8px;
+    input{
+      height:40px;
+      ::placeholder{
+        font-size:0.8em;
+      }
+    }
+    button{
+      font-size:1.1em;
 
+    }
+    a {
+      font-size:0.7em;
+    }
+  }
 `

@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom"
 import { useTransaction } from "../hooks/useTransaction"
 import trashSvg from "../assets/trashicon1.webp"
 import { Loader } from "../components/Loader"
-// import trashSvg from "../assets/trash-outline.svg"
 
 export default function HomePage() {
   const navigate = useNavigate()
