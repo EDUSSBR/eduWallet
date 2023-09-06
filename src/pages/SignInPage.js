@@ -52,7 +52,7 @@ export default function SignInPage() {
     }
   }, [])
   return (errorMessage[0] === "ContraEncontrada" ? (<LoaderContainer><p>Detectamos sua conta, aguarde, validando informações...</p>
-  <Loader height="40px" width="80px" radius="15" wrapperStyle={{ background: "inherit" }} />
+  <Loader height="40px" width="80px" radius="15px" wrapperStyle={{ background: "inherit" }} />
 </LoaderContainer>) :
     (<SingInContainer>
       <form onSubmit={(e) => autenticarUsuario(e)}>

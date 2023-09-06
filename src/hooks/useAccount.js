@@ -33,7 +33,6 @@ export function AccountProvider({ children }) {
             }
         } catch (e) {
             navigate('/')
-
         }
     }
     async function criarUsuario(e) {
