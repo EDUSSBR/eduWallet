@@ -28,6 +28,13 @@ The following tools and frameworks were used in the construction of the project:
   <img style='margin: 5px;' src='https://img.shields.io/badge/react-icons%20-%2320232a.svg?&style=for-the-badge&color=f28dc7&logo=react-icons&logoColor=%2361DAFB'>
 </p>
 
+# Next Steps
+
+As a next step, here are some plans for further development:
+
+- Implement a dashboard for visualizing financial data.
+- Add labels for classifying expenses (e.g., "Groceries," "Entertainment," "Utilities," etc.).
+
 ## How to run
 
 1. Clone this repository
