@@ -5,7 +5,7 @@ Simple, efficient money manager. Track income, expenses, and always know your ba
 <div  align="center">
 <img src="/public/eduWallet-example.gif" />
 </div>
-Try it out now at ....deploy under construction
+Try it out now at https://edu-wallet.vercel.app/
 
 ## About
 
@@ -28,7 +28,7 @@ The following tools and frameworks were used in the construction of the project:
   <img style='margin: 5px;' src='https://img.shields.io/badge/react-icons%20-%2320232a.svg?&style=for-the-badge&color=f28dc7&logo=react-icons&logoColor=%2361DAFB'>
 </p>
 
-# Next Steps
+## Next Steps
 
 As a next step, here are some plans for further development:
 
